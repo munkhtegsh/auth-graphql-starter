@@ -31,6 +31,18 @@ const mutation = new GraphQLObjectType({
         return user; // return logged out user in gql
       },
     },
+
+    login: {
+      type: UserType,
+      args: {
+        email: {type: GraphQLString},
+        password: {type: GraphQLString},
+      },
+      resolve(parentValue, {email, password}, req) {
+        console.log(email, password, req);
+        return AuthService.login({email, password, req});
+      },
+    },
   },
 });
 
