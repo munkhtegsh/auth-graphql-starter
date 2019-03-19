@@ -1,15 +1,25 @@
 import React, {Component} from 'react';
 import {graphql} from 'react-apollo';
-import CurrentUser from '../queries/CurrentUser';
+import fetchCurrentUser from '../queries/CurrentUser';
 import {Link} from 'react-router';
+import fetchLogout from '../mutations/Logout';
+import {hashHistory} from 'react-router';
 
 class Header extends Component {
+  onLogout() {
+    this.props.mutate({}).then(() => this.props.data.refetch()); // refetch changes header Logout to Login and Signup btn
+  }
+
   renderButtons() {
     const {loading, user} = this.props.data;
     if (loading) return <div />;
 
     if (user) {
-      return <div>Logout</div>;
+      return (
+        <li>
+          <a onClick={this.onLogout.bind(this)}>Logout</a>
+        </li>
+      );
     } else {
       return (
         <div>
@@ -40,4 +50,4 @@ class Header extends Component {
   }
 }
 
-export default graphql(CurrentUser)(Header);
+export default graphql(fetchLogout)(graphql(fetchCurrentUser)(Header));
